@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venice Roleplay - Loja Oficial</title>
+    <style>
+        /* CSS GERAL E DE FUNDO */
+        body {
+            margin: 0;
+            overflow-x: hidden; /* Esconde rolagem horizontal */
+            background: radial-gradient(circle at center, #1A0F3A 0%, #0A0A2A 70%, #050210 100%); /* Fundo profundo */
+            font-family: 'Montserrat', sans-serif; /* Tentando uma fonte mais moderna/futurista */
+            color: #E0BBE4; /* Cor padrão do texto (ainda um branco/lilás claro) */
+            scroll-behavior: smooth; /* Rolagem suave para os links da navbar */
+        }
+
+        /* Importa uma fonte similar a logos gamers, se disponível no Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Montserrat:wght@400;700&display=swap');
+
+        canvas {
+            display: block; /* Remove margens padrão do canvas */
+            position: fixed; /* Fixa o canvas no fundo */
+            top: 0;
+            left: 0;
+            z-index: 0; /* Fica no fundo */
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* OVERLAYS COMUNS */
+        .overlay-message, .login-register-overlay, .payment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9); /* Fundo mais escuro para todos os overlays */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .overlay-message.active, .login-register-overlay.active, .payment-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .overlay-content {
+            background: radial-gradient(circle at center, #2A155A 0%, #1A0F3A 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 80px rgba(238, 130, 238, 0.7), 0 0 160px rgba(180, 0, 180, 0.5); /* Brilho roxo */
+            text-align: center;
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+            border: 2px solid #EE82EE; /* Borda violeta */
+            max-height: 90vh; /* Para garantir que caiba em telas menores */
+            overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+        }
+
+        .overlay-message.active .overlay-content,
+        .login-register-overlay.active .overlay-content,
+        .payment-overlay.active .overlay-content {
+            transform: scale(1);
+        }
+
+        .overlay-content h2 {
+            color: #EE82EE; /* Violeta */
+            font-family: 'Audiowide', cursive;
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px #EE82EE;
+        }
+
+        .close-button {
+            background: #9370DB; /* Roxo médio */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px rgba(147, 112, 219, 0.5);
+            position: absolute; /* Para o botão de fechar nos overlays */
+            top: 15px;
+            right: 15px;
+        }
+
+        .close-button:hover {
+            background: #BA55D3; /* Roxo mais claro */
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(186, 85, 211, 0.7);
+        }
+
+        /* DEDICATION MESSAGE (mantido como overlay-message) */
+        #dedicationMessage .overlay-content {
+            box-shadow: 0 0 60px rgba(180, 0, 180, 0.5), 0 0 120px rgba(150, 0, 150, 0.3); /* Brilho roxo */
+            border: 2px solid #8A2BE2; /* Borda roxa (Amethyst) */
+        }
+        #dedicationMessage h2 {
+            color: #EE82EE;
+            text-shadow: 0 0 15px #EE82EE;
+        }
+        #dedicationMessage p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        #dedicationMessage .creators {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #BBCCDD;
+        }
+        #dedicationMessage .creators strong {
+            color: #F0F0F0;
+        }
+        #dedicationMessage .close-button { /* Botão "Acessar HUB" */
+            position: static; /* Remove position absolute */
+            margin-top: 20px;
+        }
+
+
+        /* ENTRY BUTTON */
+        .entry-button {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #8A2BE2, #9370DB); /* Roxo intenso para roxo médio */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+            transition: all 0.4s ease;
+            z-index: 100;
+            animation: pulseEffect 2s infinite alternate;
+        }
+
+        .entry-button:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.9), 0 0 60px rgba(110, 30, 180, 0.7);
+        }
+
+        @keyframes pulseEffect {
+            0% { transform: translateX(-50%) scale(1); box-shadow: 0 0 20px rgba(138, 43, 226, 0.7); }
+            100% { transform: translateX(-50%) scale(1.03); box-shadow: 0 0 40px rgba(138, 43, 226, 0.9); }
+        }
+
+        /* NAVBAR (HUB) */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+            transform: translateY(-100%);
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .navbar.active {
+            transform: translateY(0);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            padding-left: 30px;
+        }
+
+        .navbar-center {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            padding-right: 30px;
+        }
+
+        .navbar-title {
+            color: #FFFFFF;
+            font-family: 'Audiowide', cursive;
+            font-size: 2.2em;
+            text-shadow: 0 0 10px #FFFFFF, 0 0 20px rgba(255, 255, 255, 0.7);
+            animation: neonGlowWhite 1.5s ease-in-out infinite alternate;
+            margin-right: 30px;
+        }
+
+        @keyframes neonGlowWhite {
+            from { text-shadow: 0 0 5px #FFFFFF, 0 0 10px #FFFFFF, 0 0 15px rgba(255, 255, 255, 0.8); }
+            to { text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px rgba(255, 255, 255, 1); }
+        }
+
+
+        .navbar a {
+            color: #E0BBE4;
+            text-decoration: none;
+            font-size: 1.1em;
+            margin: 0 15px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navbar a:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .navbar a:hover:before {
+            left: 100%;
+        }
+
+        .navbar a:hover {
+            color: #EE82EE;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 15px rgba(238, 130, 238, 0.5);
+            text-shadow: 0 0 10px #EE82EE;
+        }
+
+        .login-button {
+            background: linear-gradient(45deg, #9370DB, #8A2BE2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(147, 112, 219, 0.6);
+            margin-left: 15px;
+        }
+
+        .login-button:hover {
+            background: linear-gradient(45deg, #8A2BE2, #9370DB);
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.8);
+        }
+
+        /* SEÇÕES DE CONTEÚDO */
+        .content-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 100px;
+            padding-bottom: 50px; /* Adicionado padding para baixo */
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            width: 95%; /* Para garantir que as seções não ocupem 100% da largura, deixando uma margem */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .content-section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-section:nth-child(even) {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .content-section h1 {
+            color: #EE82EE;
+            font-family: 'Audiowide', cursive;
+            font-size: 3.5em;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px #EE82EE, 0 0 35px rgba(238, 130, 238, 0.8);
+            animation: textGlowPurple 3s infinite alternate;
+            text-align: center; /* Centraliza o título */
+        }
+
+        @keyframes textGlowPurple {
+            0% { text-shadow: 0 0 10px #EE82EE; }
+            100% { text-shadow: 0 0 25px #F0F0F0, 0 0 40px #EE82EE; }
+        }
+
+        /* LOJA (PRODUTOS) */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .product-item {
+            background: rgba(26, 15, 58, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #EE82EE;
+        }
+
+        .product-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 0 50px rgba(138, 43, 226, 0.7), 0 0 100px rgba(110, 30, 180, 0.5);
+        }
+
+        .product-item img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            filter: saturate(1.2) brightness(1.1);
+            transition: filter 0.5s ease;
+        }
+
+        .product-item:hover img {
+            filter: saturate(1.5) brightness(1.2) hue-rotate(5deg);
+        }
+
+        .product-item h3 {
+            color: #F0F0F0;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .product-item p {
+            font-size: 1.1em;
+            color: #BBCCDD;
+            margin-bottom: 15px;
+        }
+
+        .product-item .price {
+            font-size: 1.6em;
+            color: #EE82EE;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px #EE82EE;
+        }
+
+        .add-to-cart-button {
+            background: linear-gradient(45deg, #EE82EE, #BA55D3);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(238, 130, 238, 0.5);
+        }
+
+        .add-to-cart-button:hover {
+            background: linear-gradient(45deg, #BA55D3, #EE82EE);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 25px rgba(238, 130, 238, 0.7);
+        }
+
+        /* FEEDBACK (ENVIAR) */
+        .feedback-form {
+            background: rgba(26, 15, 58, 0.7);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.6);
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid #EE82EE;
+            text-align: center; /* Centraliza os itens dentro do form */
+        }
+
+        .feedback-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #E0BBE4;
+            text-align: left; /* Alinha label à esquerda */
+            width: calc(100% - 20px); /* Para alinhar com os inputs */
+            max-width: 560px; /* Limita a largura da label */
+            margin-left: auto; /* Centraliza a label */
+            margin-right: auto;
+        }
+
+        .feedback-form input[type="text"],
+        .feedback-form input[type="email"],
+        .feedback-form textarea {
+            width: calc(100% - 40px); /* Ajustado para 20px de padding total */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #EE82EE;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #F0F0F0;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feedback-form input[type="text"]:focus,
+        .feedback-form input[type="email"]:focus,
+        .feedback-form textarea:focus {
+            border-color: #EE82EE;
+            box-shadow: 0 0 10px rgba(238, 130, 238, 0.5);
+            outline: none;
+        }
+
+        .feedback-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .feedback-form button {
+            background: linear-gradient(45deg, #BA55D3, #EE82EE);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(186, 85, 211, 0.6);
+            width: auto; /* Volta para auto para o botão não esticar */
+            min-width: 200px;
+        }
+
+        .feedback-form button:hover {
+            background: linear-gradient(45deg, #EE82EE, #BA55D3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 30px rgba(238, 130, 238, 0.8);
+        }
+
+        /* FEEDBACKS DOS CLIENTES (EXIBIR) */
+        .feedbacks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Espaçamento entre os feedbacks */
+            width: 90%;
+            max-width: 800px; /* Largura máxima para a lista de feedbacks */
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(26, 15, 58, 0.6); /* Fundo sutil para a lista */
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+            border: 1px solid #BA55D3;
+        }
+
+        .feedback-item {
+            background: rgba(10, 5, 20, 0.8); /* Fundo mais escuro para cada item */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(238, 130, 238, 0.3); /* Brilho individual */
+            border: 1px solid #EE82EE;
+            text-align: left; /* Alinha o texto do feedback à esquerda */
+            position: relative; /* Para a data */
+        }
+
+        .feedback-item strong {
+            color: #F0F0F0;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            display: block; /* Para o nome ficar em uma linha separada */
+        }
+
+        .feedback-item p {
+            font-size: 1em;
+            color: #BBCCDD;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        .feedback-item .feedback-date {
+            font-size: 0.85em;
+            color: #999;
+            text-align: right;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        /* CARRINHO */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed rgba(224, 187, 228, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info span {
+            font-size: 1.1em;
+            color: #BBCCDD;
+        }
+        .cart-item-info strong {
+             color: #F0F0F0;
+        }
+
+        .cart-total {
+            font-size: 1.8em;
+            color: #EE82EE;
+            font-weight: bold;
+            margin-top: 30px;
+            text-shadow: 0 0 10px #EE82EE;
+        }
+
+        .checkout-button {
+            background: linear-gradient(45deg, #EE82EE, #9370DB);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 1.5em;
+            margin-top: 40px;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 30px rgba(238, 130, 238, 0.8);
+        }
+
+        .checkout-button:hover {
+            background: linear-gradient(45deg, #9370DB, #EE82EE);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 50px rgba(238, 130, 238, 1);
+        }
+
+        /* LOGIN/REGISTER OVERLAY */
+        .login-register-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .login-register-tab-button {
+            background: rgba(147, 112, 219, 0.3);
+            color: #E0BBE4;
+            border: 1px solid #EE82EE;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .login-register-tab-button.active,
+        .login-register-tab-button:hover {
+            background: linear-gradient(45deg, #EE82EE, #9370DB);
+            color: white;
+            box-shadow: 0 0 20px rgba(238, 130, 238, 0.7);
+        }
+
+        .login-form, .register-form {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .login-form.active, .register-form.active {
+            display: flex;
+        }
+
+        .login-form label, .register-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #E0BBE4;
+            text-align: left;
+            width: calc(80% - 20px);
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .login-form input, .register-form input {
+            width: calc(80% - 40px); /* Ajustado para 20px de padding total */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #EE82EE;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #F0F0F0;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-form input:focus, .register-form input:focus {
+            border-color: #EE82EE;
+            box-shadow: 0 0 10px rgba(238, 130, 238, 0.5);
+            outline: none;
+        }
+
+        .login-form button, .register-form button {
+            background: linear-gradient(45deg, #BA55D3, #EE82EE);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(186, 85, 211, 0.6);
+            width: auto;
+            min-width: 200px;
+            margin-top: 10px; /* Espaçamento entre os botões */
+        }
+
+        .login-form button:hover, .register-form button:hover {
+            background: linear-gradient(45deg, #EE82EE, #BA55D3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 30px rgba(238, 130, 238, 0.8);
+        }
+
+        /* Estilos para botões de login social */
+        .social-login-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: calc(80% - 40px); /* Alinha com os inputs */
+            max-width: 560px;
+            margin-top: 25px; /* Espaço acima dos botões sociais */
+            border-top: 1px solid rgba(224, 187, 228, 0.3); /* Linha divisória */
+            padding-top: 25px;
+        }
+
+        .social-login-buttons button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none; /* Remove borda padrão */
+            margin-top: 0; /* Reseta margem do botão padrão */
+        }
+
+        .social-login-buttons button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .discord-button {
+            background: #5865F2; /* Cor oficial do Discord */
+            color: white;
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.6);
+        }
+
+        .discord-button:hover {
+            background: #7289DA; /* Tom mais claro ao hover */
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 25px rgba(88, 101, 242, 0.8);
+        }
+
+        .google-button {
+            background: #4285F4; /* Cor oficial do Google */
+            color: white;
+            box-shadow: 0 0 15px rgba(66, 133, 244, 0.6);
+        }
+
+        .google-button:hover {
+            background: #6294F7; /* Tom mais claro ao hover */
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 25px rgba(66, 133, 244, 0.8);
+        }
+
+        /* PAYPAL OVERLAY */
+        .payment-overlay .overlay-content {
+            max-width: 800px; /* Aumenta a largura para acomodar mais campos */
+            text-align: left; /* Alinha o conteúdo à esquerda dentro do overlay */
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            margin-top: 30px;
+            margin-bottom: 30px; /* Adicionado margem inferior */
+        }
+
+        .payment-method-item {
+            background: rgba(26, 15, 58, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #EE82EE;
+        }
+
+        .payment-method-item.selected {
+            border: 2px solid #00FFC0; /* Borda verde-água quando selecionado */
+            box-shadow: 0 0 40px rgba(0, 255, 192, 0.8);
+            transform: scale(1.08); /* Aumenta um pouco mais */
+        }
+
+
+        .payment-method-item:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.6);
+        }
+
+        .payment-method-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(238, 130, 238, 0.5));
+        }
+
+        .payment-method-item span {
+            display: block;
+            color: #F0F0F0;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        /* Campos de Formulário de Pagamento */
+        .payment-form-section {
+            background: rgba(10, 5, 20, 0.8); /* Fundo mais escuro para os campos */
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(238, 130, 238, 0.3);
+            border: 1px solid #BA55D3;
+            display: flex; /* Para flexbox interno */
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px; /* Limita a largura do formulário */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .payment-form-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1em;
+            color: #E0BBE4;
+            text-align: left;
+        }
+
+        .payment-form-section input[type="text"],
+        .payment-form-section input[type="email"],
+        .payment-form-section input[type="number"],
+        .payment-form-section input[type="password"], /* para CVV */
+        .payment-form-section input[type="tel"], /* para CPF/CNPJ ou telefone */
+        .payment-form-section select { /* para estado/cidade se aplicável */
+            width: calc(100% - 24px); /* Com 12px de padding em cada lado */
+            padding: 12px;
+            border: 1px solid #EE82EE;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #F0F0F0;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .payment-form-section input[type="text"]:focus,
+        .payment-form-section input[type="email"]:focus,
+        .payment-form-section input[type="number"]:focus,
+        .payment-form-section input[type="password"]:focus,
+        .payment-form-section input[type="tel"]:focus,
+        .payment-form-section select:focus {
+            border-color: #EE82EE;
+            box-shadow: 0 0 10px rgba(238, 130, 238, 0.5);
+            outline: none;
+        }
+
+        .payment-form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+        }
+
+        .payment-form-row > div {
+            flex: 1; /* Distribui o espaço igualmente */
+            min-width: 150px; /* Garante que os campos não fiquem muito estreitos */
+        }
+
+        .payment-form-checkbox {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #BBCCDD;
+        }
+
+        .payment-form-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px; /* Tamanho maior para o checkbox */
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #EE82EE;
+            border-radius: 4px;
+            appearance: none; /* Remove estilo padrão */
+            -webkit-appearance: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .payment-form-checkbox input[type="checkbox"]:checked {
+            background: #00FFC0; /* Cor verde-água quando checado */
+            border-color: #00FFC0;
+        }
+
+        .payment-form-checkbox input[type="checkbox"]::after {
+            content: '\2713'; /* Símbolo de check */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0A0A2A; /* Cor escura para o check */
+            font-size: 16px;
+            display: none;
+        }
+
+        .payment-form-checkbox input[type="checkbox"]:checked::after {
+            display: block;
+        }
+
+        .payment-form-checkbox a {
+            color: #EE82EE;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .payment-form-checkbox a:hover {
+            color: #BA55D3;
+            text-decoration: underline;
+        }
+
+        .payment-confirm-button {
+            background: linear-gradient(45deg, #00FFC0, #00AACC);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.4em;
+            margin-top: 40px;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 30px rgba(0, 255, 192, 0.8);
+            width: auto;
+            min-width: 250px;
+        }
+
+        .payment-confirm-button:hover {
+            background: linear-gradient(45deg, #00AACC, #00FFC0);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 255, 192, 1);
+        }
+
+        /* Estilo para QR Code (simulado) */
+        .qrcode-display {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(0, 255, 192, 0.5);
+            border: 1px solid #00FFC0;
+        }
+
+        .qrcode-display img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            border: 2px solid #333;
+        }
+
+        .qrcode-display p {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .qrcode-copy-button {
+            background: #9370DB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .qrcode-copy-button:hover {
+            background: #BA55D3;
+        }
+
+
+        /* ESTILOS PARA SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0A2A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #EE82EE;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #BA55D3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="entry-button" id="enterPortal">
+        EXPLORAR VENICE
+    </div>
+
+    <div class="overlay-message" id="dedicationMessage">
+        <div class="overlay-content">
+            <button class="close-button" id="closeDedicacion" style="position: static; margin-top: 20px;">Acessar HUB</button>
+            <h2>Mensagem dos Criadores</h2>
+            <p>Bem-vindo à Venice Roleplay. Este é um portal forjado com paixão, dedicação e a visão de um mundo onde a imaginação encontra a realidade virtual. Desfrute da sua jornada.</p>
+            <div class="creators">
+                <p>Conceito e Direção: <strong>Leme</strong></p>
+                <p>Desenvolvimento: <strong>Eduardo</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar" id="mainNavbar">
+        <div class="navbar-left">
+            <span class="navbar-title">Venice Roleplay</span>
+        </div>
+        <div class="navbar-center">
+            <a href="#loja-venice" id="navLoja">Loja</a>
+            <a href="#feedback-venice">Feedback</a>
+            <a href="#view-feedbacks">Comentários</a>
+            <a href="#" id="viewCartButton">Carrinho (0)</a>
+            </div>
+        <div class="navbar-right">
+            <button class="login-button" id="openRegisterButton">Registrar</button>
+            <button class="login-button" id="openLoginButton">Login</button>
+        </div>
+    </nav>
+
+    <main style="position: relative; z-index: 1;">
+        <section id="loja-venice" class="content-section">
+            <h1>Loja Venice</h1>
+            <p style="font-size: 1.3em; margin-bottom: 50px; text-align: center; max-width: 800px;">Adquira itens exclusivos para sua experiência em Venice Roleplay.</p>
+            <div class="product-grid">
+                </div>
+        </section>
+
+        <section id="feedback-venice" class="content-section">
+            <h1>Envie seu Feedback</h1>
+            <p style="font-size: 1.3em; margin-bottom: 50px; text-align: center; max-width: 800px;">Sua opinião é valiosa para o desenvolvimento de Venice Roleplay.</p>
+            <form class="feedback-form" id="feedbackForm">
+                <label for="feedback-name">Seu Nickname:</label>
+                <input type="text" id="feedback-name" name="name" required placeholder="Seu nickname no jogo">
+
+                <label for="feedback-email">Seu Email (Opcional, não será exibido):</label>
+                <input type="email" id="feedback-email" name="email" placeholder="seu.email@exemplo.com">
+
+                <label for="feedback-message">Sua Mensagem:</label>
+                <textarea id="feedback-message" name="message" required placeholder="Escreva sua opinião sobre a loja ou o servidor..."></textarea>
+
+                <button type="submit">Enviar Feedback</button>
+            </form>
+        </section>
+
+        <section id="view-feedbacks" class="content-section">
+            <h1>O que nossos clientes dizem</h1>
+            <p style="font-size: 1.3em; margin-bottom: 50px; text-align: center; max-width: 800px;">Leia os comentários de outros membros e veja a credibilidade da nossa comunidade!</p>
+            <div class="feedbacks-list" id="feedbacksList">
+                <p style="text-align: center; color: #BBCCDD;">Nenhum feedback ainda. Seja o primeiro a comentar!</p>
+            </div>
+        </section>
+
+        </main>
+
+    <div class="cart-overlay overlay-message" id="cartOverlay">
+        <div class="overlay-content">
+            <button class="close-button" id="closeCartButton">X</button>
+            <h2>Seu Carrinho</h2>
+            <div id="cartItemsList">
+                </div>
+            <div class="cart-total" id="cartTotal">Total: R$ 0,00</div>
+            <button class="checkout-button" id="proceedToPayment">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <div class="login-register-overlay" id="loginRegisterOverlay">
+        <div class="overlay-content">
+            <button class="close-button" id="closeLoginRegister">X</button>
+            <h2>Acessar Venice RP</h2>
+
+            <div class="login-register-tabs">
+                <button class="login-register-tab-button active" data-form="login">Login</button>
+                <button class="login-register-tab-button" data-form="register">Registrar</button>
+            </div>
+
+            <form class="login-form active" id="loginForm">
+                <label for="login-username" style="align-self: flex-start; margin-left: 10%;">Nome de Usuário:</label>
+                <input type="text" id="login-username" placeholder="Seu nome de usuário" required>
+
+                <label for="login-password" style="align-self: flex-start; margin-left: 10%;">Senha:</label>
+                <input type="password" id="login-password" placeholder="Sua senha" required>
+
+                <button type="submit">Entrar</button>
+
+                <div class="social-login-buttons">
+                    <button type="button" class="discord-button" id="discordLoginButton">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo"> Entrar com Discord
+                    </button>
+                    <button type="button" class="google-button" id="googleLoginButton">
+                        <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="Google Logo"> Entrar com Google
+                    </button>
+                </div>
+            </form>
+
+            <form class="register-form" id="registerForm">
+                <label for="register-username" style="align-self: flex-start; margin-left: 10%;">Nome de Usuário:</label>
+                <input type="text" id="register-username" placeholder="Escolha um nome de usuário" required>
+
+                <label for="register-email" style="align-self: flex-start; margin-left: 10%;">Email:</label>
+                <input type="email" id="register-email" placeholder="Seu email" required>
+
+                <label for="register-password" style="align-self: flex-start; margin-left: 10%;">Senha:</label>
+                <input type="password" id="register-password" placeholder="Crie uma senha" required>
+
+                <label for="register-confirm-password" style="align-self: flex-start; margin-left: 10%;">Confirmar Senha:</label>
+                <input type="password" id="register-confirm-password" placeholder="Confirme sua senha" required>
+
+                <button type="submit">Criar Conta</button>
+
+                <div class="social-login-buttons">
+                    <button type="button" class="discord-button" id="discordRegisterButton">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo"> Registrar com Discord
+                    </button>
+                    <button type="button" class="google-button" id="googleRegisterButton">
+                        <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="Google Logo"> Registrar com Google
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="payment-overlay" id="paymentOverlay">
+        <div class="overlay-content">
+            <button class="close-button" id="closePaymentOverlay">X</button>
+            <h2>Finalizar Pagamento</h2>
+
+            <div class="payment-methods-grid">
+                <div class="payment-method-item" data-method="pix">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix_-_Marca_do_Banco_Central_do_Brasil.svg/1200px-Logo_Pix_-_Marca_do_Banco_Central_do_Brasil.svg.png" alt="Pix">
+                    <span>Pix</span>
+                </div>
+                <div class="payment-method-item" data-method="paypal">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174861.png" alt="PayPal">
+                    <span>PayPal</span>
+                </div>
+                <div class="payment-method-item" data-method="creditcard">
+                    <img src="https://cdn-icons-png.flaticon.com/512/649/649722.png" alt="Cartão de Crédito">
+                    <span>Cartão de Crédito</span>
+                </div>
+                <div class="payment-method-item" data-method="boleto">
+                    <img src="https://cdn-icons-png.flaticon.com/512/8150/8150389.png" alt="Boleto">
+                    <span>Boleto</span>
+                </div>
+                </div>
+
+            <div class="payment-form-section" id="pixForm" style="display: none;">
+                <h3>Pagamento via Pix</h3>
+                <p style="color: #BBCCDD; font-size: 0.95em; text-align: center; margin-top: -10px;">Preencha com seu e-mail para receber o comprovante e informações do Pix.</p>
+
+                <label for="pix-email">Endereço de E-mail (para o recibo):</label>
+                <input type="email" id="pix-email" placeholder="seu.email@exemplo.com" required>
+
+                <label for="pix-cpf-cnpj">CPF ou CNPJ (para identificação):</label>
+                <input type="text" id="pix-cpf-cnpj" placeholder="000.000.000-00 ou XX.XXX.XXX/0001-XX" maxlength="18" required>
+
+                <div class="payment-form-checkbox">
+                    <input type="checkbox" id="pix-accept-terms" required>
+                    <label for="pix-accept-terms">Eu concordo com os <a href="#" target="_blank">Termos de Serviço</a> e a <a href="#" target="_blank">Política de Privacidade</a>.</label>
+                </div>
+
+                <div class="qrcode-display" id="pixQRCodeDisplay" style="display: none;">
+                    <p>Escaneie para Pagar:</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SeuPixAqui" alt="QR Code Pix">
+                    <input type="text" id="pix-copy-paste-code" value="CHAVEDOPIXSIMULADA123456789" readonly style="text-align: center; font-family: monospace; cursor: pointer;">
+                    <button class="qrcode-copy-button" data-copy-target="pix-copy-paste-code">Copiar Código Pix</button>
+                    <p style="font-size: 0.85em; color: #666; margin-top: 10px;">Válido por 30 minutos.</p>
+                </div>
+            </div>
+
+            <div class="payment-form-section" id="paypalForm" style="display: none;">
+                <h3>Pagamento via PayPal</h3>
+                <p style="color: #BBCCDD; font-size: 0.95em; text-align: center; margin-top: -10px;">Você será redirecionado ao site seguro do PayPal para completar a transação.</p>
+
+                <label for="paypal-email">Endereço de E-mail do PayPal:</label>
+                <input type="email" id="paypal-email" placeholder="seu.email.paypal@exemplo.com" required>
+
+                <div class="payment-form-checkbox">
+                    <input type="checkbox" id="paypal-accept-terms" required>
+                    <label for="paypal-accept-terms">Eu concordo com os <a href="#" target="_blank">Termos de Serviço</a> e a <a href="#" target="_blank">Política de Privacidade</a>.</label>
+                </div>
+            </div>
+
+            <div class="payment-form-section" id="boletoForm" style="display: none;">
+                <h3>Pagamento via Boleto Bancário</h3>
+                <p style="color: #BBCCDD; font-size: 0.95em; text-align: center; margin-top: -10px;">O boleto será gerado e enviado para o seu e-mail. O prazo de compensação é de até 3 dias úteis.</p>
+
+                <label for="boleto-email">Endereço de E-mail (para receber o boleto):</label>
+                <input type="email" id="boleto-email" placeholder="seu.email@exemplo.com" required>
+
+                <label for="boleto-cpf-cnpj">CPF ou CNPJ (do pagador):</label>
+                <input type="text" id="boleto-cpf-cnpj" placeholder="000.000.000-00 ou XX.XXX.XXX/0001-XX" maxlength="18" required>
+
+                <div class="payment-form-row">
+                    <div>
+                        <label for="boleto-fullname">Nome Completo:</label>
+                        <input type="text" id="boleto-fullname" placeholder="Nome do Pagador" required>
+                    </div>
+                    <div>
+                        <label for="boleto-phone">Telefone (com DDD):</label>
+                        <input type="tel" id="boleto-phone" placeholder="(XX) XXXXX-XXXX" maxlength="15" required>
+                    </div>
+                </div>
+
+                <label for="boleto-address">Endereço Completo:</label>
+                <input type="text" id="boleto-address" placeholder="Rua, Número, Bairro, Cidade, Estado, CEP" required>
+
+
+                <div class="payment-form-checkbox">
+                    <input type="checkbox" id="boleto-accept-terms" required>
+                    <label for="boleto-accept-terms">Eu concordo com os <a href="#" target="_blank">Termos de Serviço</a> e a <a href="#" target="_blank">Política de Privacidade</a>.</label>
+                </div>
+            </div>
+
+            <div class="payment-form-section" id="creditCardForm" style="display: none;">
+                <h3>Informações do Cartão</h3>
+                <p style="color: #BBCCDD; font-size: 0.95em; text-align: center; margin-top: -10px;">Mantenha suas informações seguras. Não armazenamos seus dados de cartão.</p>
+
+                <label for="card-full-name">Nome Completo no Cartão:</label>
+                <input type="text" id="card-full-name" placeholder="Nome Completo" required>
+
+                <label for="card-number">Número do Cartão:</label>
+                <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+
+                <div class="payment-form-row">
+                    <div>
+                        <label for="card-expiry">Data de Validade:</label>
+                        <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    <div>
+                        <label for="card-cvv">CVV / CVC:</label>
+                        <input type="password" id="card-cvv" placeholder="XXX" maxlength="4" required>
+                    </div>
+                </div>
+
+                <label for="card-email">Endereço de E-mail (para o recibo):</label>
+                <input type="email" id="card-email" placeholder="seu.email@exemplo.com" required>
+
+                <div class="payment-form-checkbox">
+                    <input type="checkbox" id="card-accept-terms" required>
+                    <label for="card-accept-terms">Eu concordo com os <a href="#" target="_blank">Termos de Serviço</a> e a <a href="#" target="_blank">Política de Privacidade</a>.</label>
+                </div>
+            </div>
+
+
+            <p style="margin-top: 30px; font-size: 1.1em; color: #BBCCDD;">Total a Pagar: <strong id="paymentTotal">R$ 0,00</strong></p>
+            <button class="payment-confirm-button" id="confirmPaymentButton">Pagar <span id="buttonPaymentAmount">R$ 0,00</span></button>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // --- JAVASCRIPT (THREE.JS) ---
+        let scene, camera, renderer, particles, mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        const dedicationMessage = document.getElementById('dedicationMessage');
+        const closeDedicacionButton = document.getElementById('closeDedicacion');
+        const enterPortalButton = document.getElementById('enterPortal');
+        const mainNavbar = document.getElementById('mainNavbar');
+        const productGrid = document.querySelector('.product-grid');
+        const viewCartButton = document.getElementById('viewCartButton');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const closeCartButton = document.getElementById('closeCartButton');
+        const cartItemsList = document.getElementById('cartItemsList');
+        const cartTotal = document.getElementById('cartTotal');
+
+        // Novos elementos para Login/Registro
+        const openLoginButton = document.getElementById('openLoginButton');
+        const openRegisterButton = document.getElementById('openRegisterButton');
+        const loginRegisterOverlay = document.getElementById('loginRegisterOverlay');
+        const closeLoginRegister = document.getElementById('closeLoginRegister');
+        const loginRegisterTabButtons = document.querySelectorAll('.login-register-tab-button');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+
+        // Novos botões de login social
+        const discordLoginButton = document.getElementById('discordLoginButton');
+        const googleLoginButton = document.getElementById('googleLoginButton');
+        const discordRegisterButton = document.getElementById('discordRegisterButton');
+        const googleRegisterButton = document.getElementById('googleRegisterButton');
+
+
+        // Novos elementos para Pagamento
+        const proceedToPaymentButton = document.getElementById('proceedToPayment');
+        const paymentOverlay = document.getElementById('paymentOverlay');
+        const closePaymentOverlay = document.getElementById('closePaymentOverlay');
+        const paymentMethodsGrid = document.querySelector('.payment-methods-grid');
+        const paymentTotalDisplay = document.getElementById('paymentTotal');
+        const confirmPaymentButton = document.getElementById('confirmPaymentButton');
+        const buttonPaymentAmount = document.getElementById('buttonPaymentAmount');
+
+        // Referências aos novos formulários de pagamento
+        const creditCardForm = document.getElementById('creditCardForm');
+        const pixForm = document.getElementById('pixForm');
+        const paypalForm = document.getElementById('paypalForm');
+        const boletoForm = document.getElementById('boletoForm');
+
+        // Elementos específicos do Pix
+        const pixQRCodeDisplay = document.getElementById('pixQRCodeDisplay');
+        const pixCopyPasteCodeInput = document.getElementById('pix-copy-paste-code');
+
+        // Elementos específicos do Boleto
+        const boletoCPFCNPJInput = document.getElementById('boleto-cpf-cnpj');
+        const boletoPhoneInput = document.getElementById('boleto-phone');
+
+        let cart = []; // Array para simular o carrinho de compras
+        let currentTotal = 0; // Para o total do pagamento
+
+        // Dados dos produtos (simulados, com imagens genéricas para IA e nomes ajustados)
+        const products = [
+            { id: 'car01', name: 'Carro Exclusivo: Skyline GT', price: 500.00, imageUrl: 'https://via.placeholder.com/300x200?text=Carro+FiveM' },
+            { id: 'vip01', name: 'Pacote VIP: Acesso Total', price: 200.00, imageUrl: 'https://via.placeholder.com/300x200?text=VIP+FiveM' },
+            { id: 'house01', name: 'Casa Premium: Mansão Moderna', price: 1000.00, imageUrl: 'https://via.placeholder.com/300x200?text=Casa+FiveM' },
+            { id: 'id01', name: 'RG Exclusivo: Identidade Única', price: 50.00, imageUrl: 'https://via.placeholder.com/300x200?text=ID+FiveM' },
+            { id: 'money01', name: 'Pacote de Dinheiro ($100.000)', price: 10.00, imageUrl: 'https://via.placeholder.com/300x200?text=Dinheiro+FiveM' },
+            { id: 'car02', name: 'Carro Esportivo: McLaren', price: 750.00, imageUrl: 'https://via.placeholder.com/300x200?text=Carro+Esportivo' },
+        ];
+
+
+        // Funções do Three.js (as mesmas do exemplo anterior para o fundo 3D)
+        function init() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0A0A2A, 0.0008);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
+            camera.position.z = 1000;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.insertBefore(renderer.domElement, document.body.firstChild);
+
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const numParticles = 20000;
+
+            for (let i = 0; i < numParticles; i++) {
+                const x = THREE.MathUtils.randFloatSpread(2000);
+                const y = THREE.MathUtils.randFloatSpread(2000);
+                const z = THREE.MathUtils.randFloatSpread(2000);
+                vertices.push(x, y, z);
+            }
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            const material = new THREE.PointsMaterial({
+                color: 0xEE82EE,
+                size: 2,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true
+            });
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xEE82EE, 1, 1000);
+            pointLight.position.set(0, 0, 500);
+            scene.add(pointLight);
+            const pointLight2 = new THREE.PointLight(0xFFFFFF, 1, 1000);
+            pointLight2.position.set(0, 0, -500);
+            scene.add(pointLight2);
+
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.8;
+            mouseY = (event.clientY - windowHalfY) * 0.8;
+        }
+
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            particles.rotation.x += 0.0005;
+            particles.rotation.y += 0.001;
+            particles.rotation.z += 0.0002;
+
+            const positions = particles.geometry.attributes.position.array;
+            const time = Date.now() * 0.00005;
+
+            for (let i = 0; i < positions.length; i += 3) {
+                positions[i] += Math.sin(time + i * 0.0001) * 0.1;
+                positions[i + 1] += Math.cos(time + i * 0.0002) * 0.1;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            renderer.render(scene, camera);
+        }
+
+        // --- LÓGICA DE INTERAÇÃO DO SITE ---
+
+        // Ao clicar no botão inicial "EXPLORAR VENICE"
+        enterPortalButton.addEventListener('click', () => {
+            enterPortalButton.style.display = 'none';
+            dedicationMessage.classList.add('active');
+            init();
+        });
+
+        // Ao fechar a dedicatória (acessar HUB)
+        closeDedicacionButton.addEventListener('click', () => {
+            dedicationMessage.classList.remove('active');
+            mainNavbar.classList.add('active');
+        });
+
+        // Função para adicionar produtos à loja
+        function renderProducts() {
+            productGrid.innerHTML = '';
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.classList.add('product-item');
+                productItem.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.name === 'Pacote de Dinheiro ($100.000)' ? 'Moeda virtual para uso em Venice Roleplay.' : 'Item exclusivo para melhorar sua experiência no jogo.'}</p>
+                    <div class="price">R$ ${product.price.toFixed(2).replace('.', ',')}</div>
+                    <button class="add-to-cart-button" data-id="${product.id}">Adicionar ao Carrinho</button>
+                `;
+                productGrid.appendChild(productItem);
+            });
+        }
+
+        // Adicionar ao carrinho (simulado)
+        productGrid.addEventListener('click', (event) => {
+            if (event.target.classList.contains('add-to-cart-button')) {
+                const productId = event.target.dataset.id;
+                const productToAdd = products.find(p => p.id === productId);
+                if (productToAdd) {
+                    const existingItem = cart.find(item => item.id === productId);
+                    if (existingItem) {
+                        existingItem.quantity++;
+                    } else {
+                        cart.push({ ...productToAdd, quantity: 1 });
+                    }
+                    updateCartDisplay();
+                    const tempMessage = document.createElement('div');
+                    tempMessage.textContent = `"${productToAdd.name}" adicionado!`;
+                    tempMessage.style.cssText = `
+                        position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%);
+                        background: rgba(138, 43, 226, 0.8); color: white; padding: 10px 20px;
+                        border-radius: 10px; z-index: 200; opacity: 0; transition: opacity 0.5s ease;
+                        font-size: 1.2em;
+                    `;
+                    document.body.appendChild(tempMessage);
+                    setTimeout(() => {
+                        tempMessage.style.opacity = 1;
+                    }, 10);
+                    setTimeout(() => {
+                        tempMessage.style.opacity = 0;
+                        tempMessage.addEventListener('transitionend', () => tempMessage.remove());
+                    }, 1500);
+                }
+            }
+        });
+
+        // Atualizar a exibição do carrinho
+        function updateCartDisplay() {
+            cartItemsList.innerHTML = '';
+            currentTotal = 0;
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = '<p style="color: #BBCCDD;">Seu carrinho está vazio...</p>';
+                proceedToPaymentButton.style.display = 'none';
+            } else {
+                proceedToPaymentButton.style.display = 'block';
+                cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <div class="cart-item-info">
+                            <span>${item.name}</span> <br>
+                            <strong>${item.quantity} x R$ ${item.price.toFixed(2).replace('.', ',')}</strong>
+                        </div>
+                        <button class="add-to-cart-button" style="background: none; border: 1px solid #EE82EE; color: #EE82EE; padding: 5px 10px; border-radius: 5px;" data-id="${item.id}">Remover</button>
+                    `;
+                    cartItemsList.appendChild(cartItem);
+                    currentTotal += item.price * item.quantity;
+                });
+            }
+            cartTotal.textContent = `Total: R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
+            paymentTotalDisplay.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
+            buttonPaymentAmount.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`; // Atualiza o valor no botão
+            const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            viewCartButton.textContent = `Carrinho (${cartItemCount})`;
+        }
+
+        // Event listener para remover item do carrinho (simulado)
+        cartItemsList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('add-to-cart-button')) {
+                const productIdToRemove = event.target.dataset.id;
+                const index = cart.findIndex(item => item.id === productIdToRemove);
+                if (index > -1) {
+                    cart[index].quantity--;
+                    if (cart[index].quantity <= 0) {
+                        cart.splice(index, 1);
+                    }
+                }
+                updateCartDisplay();
+            }
+        });
+
+        // Abrir/Fechar carrinho
+        viewCartButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            cartOverlay.classList.add('active');
+            updateCartDisplay();
+        });
+
+        closeCartButton.addEventListener('click', () => {
+            cartOverlay.classList.remove('active');
+        });
+
+        // Função para mostrar a seção
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Event listeners para navegação na barra superior
+        document.querySelectorAll('.navbar a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                showSection(targetId);
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // --- LÓGICA DE FEEDBACKS ---
+        const FEEDBACKS_STORAGE_KEY = 'venice_rpg_feedbacks';
+
+        // Carregar feedbacks do localStorage
+        function loadFeedbacks() {
+            const feedbacksJSON = localStorage.getItem(FEEDBACKS_STORAGE_KEY);
+            return feedbacksJSON ? JSON.parse(feedbacksJSON) : [];
+        }
+
+        // Salvar feedbacks no localStorage
+        function saveFeedbacks(feedbacks) {
+            localStorage.setItem(FEEDBACKS_STORAGE_KEY, JSON.stringify(feedbacks));
+        }
+
+        // Exibir feedbacks na página
+        function renderFeedbacks() {
+            const storedFeedbacks = loadFeedbacks();
+            feedbacksList.innerHTML = ''; // Limpa a lista existente
+
+            if (storedFeedbacks.length === 0) {
+                feedbacksList.innerHTML = '<p style="text-align: center; color: #BBCCDD;">Nenhum feedback ainda. Seja o primeiro a comentar!</p>';
+            } else {
+                storedFeedbacks.forEach(feedback => {
+                    const feedbackItem = document.createElement('div');
+                    feedbackItem.classList.add('feedback-item');
+
+                    const date = new Date(feedback.timestamp);
+                    const formattedDate = date.toLocaleDateString('pt-BR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+
+                    feedbackItem.innerHTML = `
+                        <span class="feedback-date">${formattedDate}</span>
+                        <strong>${feedback.name}</strong>
+                        <p>${feedback.message}</p>
+                    `;
+                    feedbacksList.appendChild(feedbackItem);
+                });
+            }
+        }
+
+        // Simulação de envio de feedback
+        feedbackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('feedback-name').value;
+            const message = document.getElementById('feedback-message').value;
+
+            if (name && message) {
+                const newFeedback = {
+                    name: name,
+                    message: message,
+                    timestamp: new Date().toISOString()
+                };
+
+                const feedbacks = loadFeedbacks();
+                feedbacks.push(newFeedback);
+                saveFeedbacks(feedbacks);
+                renderFeedbacks(); // Atualiza a lista na tela
+
+                alert('Seu feedback foi enviado com sucesso! Obrigado por sua contribuição.');
+                this.reset(); // Limpa o formulário
+            } else {
+                alert('Por favor, preencha seu nickname e a mensagem do feedback.');
+            }
+        });
+
+
+        // --- LÓGICA DE LOGIN/REGISTRO ---
+        openLoginButton.addEventListener('click', () => {
+            loginRegisterOverlay.classList.add('active');
+            loginForm.classList.add('active');
+            registerForm.classList.remove('active');
+            loginRegisterTabButtons[0].classList.add('active');
+            loginRegisterTabButtons[1].classList.remove('active');
+        });
+
+        openRegisterButton.addEventListener('click', () => {
+            loginRegisterOverlay.classList.add('active');
+            registerForm.classList.add('active');
+            loginForm.classList.remove('active');
+            loginRegisterTabButtons[1].classList.add('active');
+            loginRegisterTabButtons[0].classList.remove('active');
+        });
+
+        closeLoginRegister.addEventListener('click', () => {
+            loginRegisterOverlay.classList.remove('active');
+        });
+
+        loginRegisterTabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                loginRegisterTabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const formType = button.dataset.form;
+                if (formType === 'login') {
+                    loginForm.classList.add('active');
+                    registerForm.classList.remove('active');
+                } else {
+                    registerForm.classList.add('active');
+                    loginForm.classList.remove('active');
+                }
+            });
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            if (username && password) {
+                alert(`Login realizado para o usuário: ${username}\n(Simulado: Em um sistema real, haveria autenticação no servidor)`);
+                loginRegisterOverlay.classList.remove('active');
+                loginForm.reset();
+            } else {
+                alert('Por favor, preencha todos os campos de login.');
+            }
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            if (username && email && password) {
+                alert(`Conta registrada para o usuário: ${username}\nEmail: ${email}\n(Simulado: Em um sistema real, o registro seria no servidor)`);
+                loginRegisterOverlay.classList.remove('active');
+                registerForm.reset();
+            } else {
+                alert('Por favor, preencha todos os campos de registro.');
+            }
+        });
+
+        // Lógica para os botões de login social (simulados)
+        discordLoginButton.addEventListener('click', () => {
+            alert('Simulando login com Discord...\n(Em um ambiente real, você seria redirecionado para a autenticação do Discord.)');
+            loginRegisterOverlay.classList.remove('active');
+            // Aqui você adicionaria a lógica para redirecionar para a URL de autorização do Discord
+        });
+
+        googleLoginButton.addEventListener('click', () => {
+            alert('Simulando login com Google...\n(Em um ambiente real, você seria redirecionado para a autenticação do Google.)');
+            loginRegisterOverlay.classList.remove('active');
+            // Aqui você adicionaria a lógica para redirecionar para a URL de autenticação do Google
+        });
+
+        discordRegisterButton.addEventListener('click', () => {
+            alert('Simulando registro com Discord...\n(Em um ambiente real, você seria redirecionado para a autenticação do Discord.)');
+            loginRegisterOverlay.classList.remove('active');
+        });
+
+        googleRegisterButton.addEventListener('click', () => {
+            alert('Simulando registro com Google...\n(Em um ambiente real, você seria redirecionado para a autenticação do Google.)');
+            loginRegisterOverlay.classList.remove('active');
+        });
+
+
+        // --- LÓGICA DE PAGAMENTO ---
+
+        // Função para esconder todos os formulários de pagamento
+        function hideAllPaymentForms() {
+            creditCardForm.style.display = 'none';
+            pixForm.style.display = 'none';
+            paypalForm.style.display = 'none';
+            boletoForm.style.display = 'none';
+            pixQRCodeDisplay.style.display = 'none'; // Esconde o QR code do Pix também
+        }
+
+        proceedToPaymentButton.addEventListener('click', () => {
+            if (cart.length > 0) {
+                cartOverlay.classList.remove('active');
+                paymentOverlay.classList.add('active');
+                paymentTotalDisplay.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
+                buttonPaymentAmount.textContent = `R$ ${currentTotal.toFixed(2).replace('.', ',')}`;
+                hideAllPaymentForms(); // Esconde os formulários específicos ao abrir o overlay
+                document.querySelectorAll('.payment-method-item').forEach(item => {
+                    item.classList.remove('selected'); // Remove seleção de métodos
+                });
+                // ADICIONADO: Exibe o botão de confirmação assim que o overlay de pagamento é aberto
+                confirmPaymentButton.style.display = 'block';
+
+            } else {
+                alert('Seu carrinho está vazio. Adicione itens antes de prosseguir com o pagamento.');
+                cartOverlay.classList.remove('active');
+            }
+        });
+
+        closePaymentOverlay.addEventListener('click', () => {
+            paymentOverlay.classList.remove('active');
+        });
+
+        paymentMethodsGrid.addEventListener('click', (e) => {
+            const selectedItem = e.target.closest('.payment-method-item');
+            if (selectedItem) {
+                document.querySelectorAll('.payment-method-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                selectedItem.classList.add('selected');
+                // O botão já estará visível, mas garantimos que o data-method esteja correto
+                confirmPaymentButton.dataset.method = selectedItem.dataset.method;
+
+                hideAllPaymentForms(); // Esconde todos antes de mostrar o correto
+
+                // Mostra o formulário correspondente ao método selecionado
+                switch (selectedItem.dataset.method) {
+                    case 'creditcard':
+                        creditCardForm.style.display = 'flex';
+                        break;
+                    case 'pix':
+                        pixForm.style.display = 'flex';
+                        break;
+                    case 'paypal':
+                        paypalForm.style.display = 'flex';
+                        break;
+                    case 'boleto':
+                        boletoForm.style.display = 'flex';
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        confirmPaymentButton.addEventListener('click', () => {
+            const selectedMethod = confirmPaymentButton.dataset.method;
+            let isValid = true;
+            let message = '';
+
+            // Validação para cada método de pagamento
+            switch (selectedMethod) {
+                case 'creditcard':
+                    const cardFullName = document.getElementById('card-full-name').value;
+                    const cardNumber = document.getElementById('card-number').value;
+                    const cardExpiry = document.getElementById('card-expiry').value;
+                    const cardCvv = document.getElementById('card-cvv').value;
+                    const cardEmail = document.getElementById('card-email').value;
+                    const cardAcceptTerms = document.getElementById('card-accept-terms').checked;
+
+                    if (!cardFullName || !cardNumber || !cardExpiry || !cardCvv || !cardEmail || !cardAcceptTerms) {
+                        isValid = false;
+                        message = 'Por favor, preencha todos os campos do cartão e aceite os termos.';
+                    } else {
+                        message = `Pagamento de R$ ${currentTotal.toFixed(2).replace('.', ',')} confirmado via Cartão de Crédito!\nEmail para recibo: ${cardEmail}\nNome no cartão: ${cardFullName}\n(Simulado: Prossiga para o gateway de pagamento real)`;
+                    }
+                    break;
+
+                case 'pix':
+                    const pixEmail = document.getElementById('pix-email').value;
+                    const pixCpfCnpj = document.getElementById('pix-cpf-cnpj').value;
+                    const pixAcceptTerms = document.getElementById('pix-accept-terms').checked;
+
+                    if (!pixEmail || !pixCpfCnpj || !pixAcceptTerms) {
+                        isValid = false;
+                        message = 'Por favor, preencha seu e-mail, CPF/CNPJ e aceite os termos para o Pix.';
+                    } else {
+                        // Simula a geração do QR Code e código copia e cola
+                        pixQRCodeDisplay.style.display = 'flex'; // Exibe o QR Code
+                        message = `Pix gerado com sucesso para R$ ${currentTotal.toFixed(2).replace('.', ',')}!\nPor favor, escaneie o QR Code ou copie o código Pix para finalizar a transação.\n(Simulado: Em um sistema real, o QR Code e código Pix seriam gerados dinamicamente.)\nEmail para recibo: ${pixEmail}`;
+                    }
+                    break;
+
+                case 'paypal':
+                    const paypalEmail = document.getElementById('paypal-email').value;
+                    const paypalAcceptTerms = document.getElementById('paypal-accept-terms').checked;
+
+                    if (!paypalEmail || !paypalAcceptTerms) {
+                        isValid = false;
+                        message = 'Por favor, preencha seu e-mail do PayPal e aceite os termos.';
+                    } else {
+                        message = `Você será redirecionado para o PayPal para completar o pagamento de R$ ${currentTotal.toFixed(2).replace('.', ',')}.\nEmail: ${paypalEmail}\n(Simulado: Redirecionamento para o PayPal)`;
+                    }
+                    break;
+
+                case 'boleto':
+                    const boletoEmail = document.getElementById('boleto-email').value;
+                    const boletoCpfCnpj = document.getElementById('boleto-cpf-cnpj').value;
+                    const boletoFullName = document.getElementById('boleto-fullname').value;
+                    const boletoPhone = document.getElementById('boleto-phone').value;
+                    const boletoAddress = document.getElementById('boleto-address').value;
+                    const boletoAcceptTerms = document.getElementById('boleto-accept-terms').checked;
+
+                    if (!boletoEmail || !boletoCpfCnpj || !boletoFullName || !boletoPhone || !boletoAddress || !boletoAcceptTerms) {
+                        isValid = false;
+                        message = 'Por favor, preencha todos os campos para a geração do boleto e aceite os termos.';
+                    } else {
+                        message = `Boleto de R$ ${currentTotal.toFixed(2).replace('.', ',')} gerado com sucesso! Será enviado para o e-mail: ${boletoEmail}.\n(Simulado: O boleto seria gerado por um sistema externo e enviado.)`;
+                    }
+                    break;
+
+                default:
+                    isValid = false;
+                    message = 'Por favor, selecione uma forma de pagamento.';
+                    break;
+            }
+
+            if (isValid) {
+                alert(message);
+                // Se o pagamento simulado for "bem-sucedido" e não for Pix (que mostra o QR Code)
+                if (selectedMethod !== 'pix') {
+                    cart = []; // Limpa o carrinho
+                    updateCartDisplay();
+                    paymentOverlay.classList.remove('active');
+                    // Limpar formulários após pagamento
+                    document.getElementById('card-full-name').value = '';
+                    document.getElementById('card-number').value = '';
+                    document.getElementById('card-expiry').value = '';
+                    document.getElementById('card-cvv').value = '';
+                    document.getElementById('card-email').value = '';
+                    document.getElementById('card-accept-terms').checked = false;
+
+                    document.getElementById('pix-email').value = '';
+                    document.getElementById('pix-cpf-cnpj').value = '';
+                    document.getElementById('pix-accept-terms').checked = false;
+
+                    document.getElementById('paypal-email').value = '';
+                    document.getElementById('paypal-accept-terms').checked = false;
+
+                    document.getElementById('boleto-email').value = '';
+                    document.getElementById('boleto-cpf-cnpj').value = '';
+                    document.getElementById('boleto-fullname').value = '';
+                    document.getElementById('boleto-phone').value = '';
+                    document.getElementById('boleto-address').value = '';
+                    document.getElementById('boleto-accept-terms').checked = false;
+                }
+            } else {
+                alert(message);
+            }
+        });
+
+        // Event listener para o botão de copiar código Pix
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('qrcode-copy-button')) {
+                const targetId = e.target.dataset.copyTarget;
+                const targetInput = document.getElementById(targetId);
+                if (targetInput) {
+                    targetInput.select();
+                    targetInput.setSelectionRange(0, 99999); // Para dispositivos móveis
+                    document.execCommand('copy');
+                    alert('Código Pix copiado para a área de transferência!');
+                }
+            }
+        });
+
+
+        // Funções para formatar campos de input (existentes para cartão, adicionados para CPF/CNPJ e Telefone)
+        document.getElementById('card-number').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 '); // Adiciona espaço a cada 4 dígitos
+            e.target.value = value.trim();
+        });
+
+        document.getElementById('card-expiry').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // Formatação para CPF/CNPJ (Boleto e Pix)
+        document.getElementById('pix-cpf-cnpj').addEventListener('input', formatCpfCnpj);
+        document.getElementById('boleto-cpf-cnpj').addEventListener('input', formatCpfCnpj);
+
+        function formatCpfCnpj(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+            if (value.length <= 11) { // CPF
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            } else { // CNPJ
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            }
+            e.target.value = value;
+        }
+
+        // Formatação para Telefone (Boleto)
+        document.getElementById('boleto-phone').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+            if (value.length > 0) {
+                value = '(' + value;
+                if (value.length > 3) {
+                    value = value.substring(0, 3) + ') ' + value.substring(3);
+                }
+                if (value.length > 9) {
+                    value = value.substring(0, 9) + '-' + value.substring(9, 14);
+                }
+            }
+            e.target.value = value;
+        });
+
+
+        // Inicia a renderização dos produtos e feedbacks quando a página carrega
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            renderFeedbacks(); // Carrega e exibe os feedbacks ao iniciar
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1208 @@
+/* Variáveis Globais: A Paleta da Pureza e Profundidade */
+:root {
+    --color-primary-purple: #4A087F;   /* Roxo principal, vibrante */
+    --color-dark-purple: #0D001A;      /* Roxo mais escuro, quase preto */
+    --color-light-purple: #9B5DCC;     /* Roxo claro para brilhos e acentos */
+    --color-pure-white: #FFFFFF;       /* Branco puro para texto e elementos de destaque */
+    --color-off-white: #F0F0F0;        /* Branco suave para fundos ou detalhes */
+    --color-text-dark: #333333;        /* Texto escuro em fundos claros */
+
+    /* Fontes Oníricas */
+    --font-display: 'Electrolize', sans-serif; /* Mais técnico e etéreo */
+    --font-body: 'Raleway', sans-serif;      /* Leve e elegante */
+
+    /* Efeitos de Sombra e Brilho (aprimorados) */
+    --shadow-subtle: 0 4px 10px rgba(0, 0, 0, 0.2);
+    --shadow-glowing-purple: 0 0 15px rgba(74, 8, 127, 0.7), 0 0 30px rgba(74, 8, 127, 0.5);
+    --shadow-glowing-white: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Reset Básico e Estilos Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    background-color: var(--color-dark-purple);
+    overflow-x: hidden; /* Previne overflow horizontal devido a animações */
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--color-pure-white);
+    line-height: 1.8; /* Mais espaçamento para leitura */
+    background-color: var(--color-dark-purple);
+    overflow-x: hidden;
+    position: relative;
+    perspective: 1200px; /* Para transformações 3D mais pronunciadas */
+    min-height: 100vh;
+}
+
+/* Global scrollbar styling - Ethereal Glow */
+::-webkit-scrollbar {
+    width: 12px; /* Mais largo */
+}
+::-webkit-scrollbar-track {
+    background: var(--color-dark-purple);
+    border-left: 1px solid var(--color-primary-purple); /* Pequena linha para guiar */
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, var(--color-light-purple), var(--color-primary-purple));
+    border-radius: 6px; /* Mais arredondado */
+    box-shadow: 0 0 10px var(--color-light-purple);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, var(--color-primary-purple), var(--color-light-purple));
+    box-shadow: 0 0 18px var(--color-primary-purple);
+}
+
+/* Custom Cursor: O Olhar da Percepção */
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px; /* Maior */
+    height: 40px;
+    border: 2px solid var(--color-pure-white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: exclusion; /* Para um efeito visual mais impactante */
+    transform-origin: center center;
+    transition: transform 0.2s ease-out, border-color 0.2s ease-out, background-color 0.2s ease-out;
+    filter: drop-shadow(0 0 8px var(--color-pure-white));
+}
+.custom-cursor-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px; /* Menor */
+    height: 8px;
+    background-color: var(--color-pure-white);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+    filter: drop-shadow(0 0 5px var(--color-pure-white));
+}
+.custom-cursor:hover {
+    border-color: var(--color-primary-purple);
+    background-color: var(--color-primary-purple);
+    filter: drop-shadow(0 0 12px var(--color-primary-purple));
+}
+.custom-cursor:hover .custom-cursor-inner {
+    background-color: var(--color-pure-white);
+}
+
+
+/* Page Transition Overlay: A Ruptura Espaço-Tempo */
+#page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, var(--color-pure-white) 0%, transparent 100%);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9999;
+    pointer-events: none;
+    filter: blur(0px) brightness(1);
+    transform: scale(0);
+}
+
+/* Header: O Limiar do Conhecimento */
+#main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(13, 0, 26, 0.6); /* Roxo escuro translúcido */
+    backdrop-filter: blur(20px) brightness(0.7); /* Mais blur e escurecimento para um efeito etéreo */
+    z-index: 1000;
+    padding: 20px 60px; /* Mais padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2); /* Linha sutil */
+    box-shadow: 0 0 12px rgba(74, 8, 127, 0.3), 0 0 30px rgba(74, 8, 127, 0.2); /* Sombra púrpura sutil */
+    transform: translateY(-100%); /* Início da animação de entrada JS */
+    opacity: 0; /* Início da animação de entrada JS */
+}
+
+.header-inner-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1600px; /* Maior largura */
+    margin: 0 auto;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Elástico */
+}
+.logo-container:hover {
+    transform: scale(1.1);
+}
+.logo-container .logo-text {
+    font-family: var(--font-display);
+    font-size: 2.2rem; /* Maior */
+    color: var(--color-pure-white);
+    margin-left: 15px;
+    text-shadow: 0 0 10px var(--color-pure-white), 0 0 25px var(--color-light-purple); /* Brilho branco e púrpura */
+}
+.logo-container img {
+    height: 50px; /* Maior */
+    width: auto;
+    filter: drop-shadow(0 0 10px var(--color-light-purple)) drop-shadow(0 0 20px var(--color-primary-purple)); /* Brilho púrpura */
+}
+
+#main-nav ul {
+    display: flex;
+    list-style: none;
+}
+#main-nav li a {
+    color: var(--color-off-white);
+    text-decoration: none;
+    padding: 15px 30px; /* Mais padding */
+    font-size: 1.3rem; /* Maior */
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    font-weight: 300; /* Mais leve */
+    letter-spacing: 1px;
+}
+#main-nav li a:hover {
+    color: var(--color-pure-white);
+    text-shadow: 0 0 12px var(--color-pure-white), 0 0 25px var(--color-light-purple);
+    transform: translateY(-5px) scale(1.03);
+}
+#main-nav li a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 4px; /* Linha mais grossa */
+    background: linear-gradient(to right, var(--color-light-purple), var(--color-pure-white), var(--color-primary-purple));
+    box-shadow: 0 0 15px var(--color-pure-white), 0 0 30px var(--color-primary-purple);
+    transition: width 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+#main-nav li a:hover::after {
+    width: 100%;
+}
+
+.header-actions {
+    display: flex;
+    gap: 20px; /* Mais espaço entre os botões */
+}
+.icon-button {
+    background: none;
+    border: none;
+    color: var(--color-off-white);
+    font-size: 2rem; /* Ícone maior */
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), filter 0.4s ease, text-shadow 0.4s ease;
+    position: relative;
+    padding: 8px; /* Área clicável */
+}
+.icon-button:hover {
+    transform: scale(1.2) rotateZ(10deg); /* Mais impacto e rotação */
+    filter: brightness(2) drop-shadow(0 0 20px var(--color-pure-white)) drop-shadow(0 0 35px var(--color-light-purple));
+    color: var(--color-pure-white);
+    text-shadow: 0 0 15px var(--color-pure-white);
+}
+.icon-button .cart-count-bubble {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background-color: var(--color-primary-purple);
+    color: var(--color-pure-white);
+    font-size: 0.9rem;
+    border-radius: 50%;
+    padding: 4px 10px; /* Maior */
+    min-width: 28px; /* Maior */
+    text-align: center;
+    border: 2px solid var(--color-off-white);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 25px rgba(74, 8, 127, 0.5);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    animation: pulse 1.5s infinite alternate ease-in-out; /* Animação mais suave */
+}
+@keyframes pulse {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(1.2); opacity: 0.9; }
+}
+.icon-button .login-text, .icon-button .register-text {
+    font-size: 1.2rem;
+    margin-left: 10px;
+    color: var(--color-off-white);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Seções (base para animação de scroll) */
+section {
+    min-height: 85vh; /* Levemente maior */
+    padding: 150px 80px; /* Mais padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    max-width: 100vw;
+    z-index: 1;
+}
+.section-full-height {
+    height: 100vh;
+    padding: 0;
+}
+.section-padded {
+    padding: 150px 80px;
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: 4.5rem; /* Título grandioso */
+    color: var(--color-pure-white);
+    margin-bottom: 80px; /* Mais espaço */
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px var(--color-pure-white), 0 0 40px var(--color-light-purple), 0 0 60px var(--color-primary-purple); /* Brilho intenso */
+    letter-spacing: 5px; /* Mais espaçamento */
+    position: relative;
+    padding-bottom: 20px;
+    line-height: 1.1;
+    font-weight: 200; /* Mais leve */
+}
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px; /* Linha maior */
+    height: 5px; /* Linha mais grossa */
+    background: linear-gradient(to right, var(--color-light-purple), var(--color-pure-white), var(--color-primary-purple));
+    box-shadow: 0 0 15px var(--color-pure-white), 0 0 30px var(--color-primary-purple);
+}
+
+/* Botões CTA: Pontos de Convergência */
+.cta-button {
+    background: linear-gradient(45deg, var(--color-primary-purple), var(--color-light-purple));
+    color: var(--color-pure-white);
+    padding: 22px 50px; /* Maior padding */
+    border: none;
+    border-radius: 70px; /* Mais arredondado */
+    font-size: 1.6rem; /* Fonte maior */
+    font-family: var(--font-display);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 0 25px rgba(74, 8, 127, 0.8), 0 0 50px rgba(74, 8, 127, 0.6); /* Brilho inicial forte */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 300;
+}
+.cta-button:hover {
+    transform: scale(1.08) translateY(-8px); /* Mais impacto ao hover */
+    box-shadow: 0 0 40px var(--color-primary-purple), 0 0 70px var(--color-primary-purple), 0 0 100px rgba(255, 255, 255, 0.7); /* Brilho combinado intenso */
+    text-shadow: 0 0 15px var(--color-pure-white);
+}
+/* Efeito de plasma pulsante no botão (GSAP gerado, mas base CSS para o visual) */
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0);
+    z-index: -1;
+}
+
+/* Hero Section: A Dissolução da Realidade */
+#hero-section {
+    height: 100vh;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-dark-purple);
+}
+#hero-section .hero-background-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at center, var(--color-primary-purple) 0%, var(--color-dark-purple) 80%);
+    filter: blur(50px);
+    opacity: 0.7;
+}
+#hero-section .hero-content {
+    text-align: center;
+    z-index: 1;
+    max-width: 1100px; /* Maior largura */
+    opacity: 0;
+    transform: translateY(100px);
+    will-change: opacity, transform;
+}
+#hero-section .heading-split-text {
+    font-family: var(--font-display);
+    font-size: 7rem; /* Título gigantesco */
+    color: var(--color-pure-white);
+    margin-bottom: 30px;
+    line-height: 1.0;
+    text-shadow: 0 0 25px var(--color-pure-white), 0 0 50px var(--color-light-purple), 0 0 80px var(--color-primary-purple);
+    letter-spacing: 7px; /* Mais espaçamento */
+    font-weight: 200;
+}
+#hero-section .subheading-fade-in {
+    font-size: 2rem; /* Subtítulo maior */
+    color: var(--color-off-white);
+    margin-bottom: 60px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+/* Category Cards e Product Grid: Os Arquivos do Subconsciente / Artefatos Oníricos */
+.category-grid, .product-grid, .hubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Cartões um pouco maiores */
+    gap: 60px; /* Mais espaçamento */
+    width: 100%;
+    max-width: 1500px; /* Largura máxima maior */
+}
+
+.category-card, .product-card, .hub-card {
+    background-color: rgba(255, 255, 255, 0.05); /* Fundo quase transparente */
+    backdrop-filter: blur(10px); /* Blur para o efeito de vidro */
+    border-radius: 30px; /* Mais arredondado */
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    color: var(--color-pure-white);
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), box-shadow 0.6s ease-out, border-color 0.6s ease-out;
+    box-shadow: 0 0 10px rgba(74, 8, 127, 0.2);
+}
+.category-card:hover, .product-card:hover, .hub-card:hover {
+    transform: translateY(-25px) scale(1.06) rotateZ(2deg); /* Mais impacto, maior rotação */
+    box-shadow: 0 25px 60px rgba(74, 8, 127, 0.7), 0 0 90px rgba(255, 255, 255, 0.5); /* Brilho combinado intenso */
+    border-color: var(--color-pure-white);
+}
+
+.card-image-wrapper, .product-image-container, .hub-card img {
+    width: 100%;
+    height: 280px; /* Maior */
+    overflow: hidden;
+    position: relative;
+}
+.card-image-wrapper img, .product-image-container img, .hub-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s ease-out, filter 1s ease-out; /* Transição mais longa e suave */
+    filter: brightness(0.8) saturate(0.8); /* Tons mais suaves inicialmente */
+}
+.category-card:hover .card-image-wrapper img, .product-card:hover .product-image-container img, .hub-card:hover img {
+    transform: scale(1.2); /* Mais zoom */
+    filter: brightness(1.2) saturate(1.2); /* Mais brilho, saturação */
+}
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(74, 8, 127, 0.8), transparent); /* Gradiente mais forte */
+    opacity: 0;
+    transition: opacity 0.8s ease-out; /* Transição mais suave */
+}
+.category-card:hover .card-overlay, .product-card:hover .card-overlay {
+    opacity: 1;
+}
+.card-title, .product-title, .hub-info h3 {
+    font-family: var(--font-display);
+    font-size: 2.5rem; /* Maior */
+    margin: 35px 0 20px;
+    color: var(--color-pure-white);
+    text-shadow: 0 0 15px var(--color-pure-white), 0 0 30px var(--color-light-purple);
+    font-weight: 300;
+}
+.card-explore-text {
+    font-size: 1.3rem; /* Maior */
+    color: var(--color-light-purple);
+    display: block;
+    padding-bottom: 35px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Hub Cards */
+.hub-card .hub-info {
+    padding: 30px;
+}
+.hub-card .hub-info p {
+    font-size: 1.1rem;
+    color: var(--color-off-white);
+    margin-bottom: 25px;
+}
+.hub-card .hub-cta {
+    background: linear-gradient(45deg, var(--color-light-purple), var(--color-primary-purple));
+    color: var(--color-pure-white);
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: var(--shadow-glowing-purple);
+}
+.hub-card .hub-cta:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 0 20px var(--color-pure-white), 0 0 40px var(--color-light-purple);
+}
+
+
+/* Product Cards (detalhes adicionais) */
+.product-card .product-badge {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background-color: var(--color-light-purple);
+    color: var(--color-dark-purple);
+    padding: 12px 20px; /* Maior */
+    border-radius: 35px; /* Mais arredondado */
+    font-size: 1.1rem; /* Maior */
+    font-weight: bold;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 30px rgba(74, 8, 127, 0.6);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.product-card .product-price {
+    font-size: 2rem; /* Maior */
+    color: var(--color-pure-white);
+    font-weight: bold;
+    margin-bottom: 35px;
+    text-shadow: 0 0 12px var(--color-pure-white), 0 0 25px var(--color-light-purple);
+}
+.product-card .add-to-cart-btn, .product-card .view-details-btn {
+    padding: 18px 40px; /* Maior padding */
+    border-radius: 40px; /* Mais arredondado */
+    font-size: 1.3rem; /* Fonte maior */
+    margin: 12px;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+.product-card .add-to-cart-btn {
+    background-color: var(--color-primary-purple);
+    color: var(--color-pure-white);
+    border: none;
+    box-shadow: var(--shadow-glowing-purple);
+}
+.product-card .add-to-cart-btn:hover {
+    background-color: var(--color-light-purple);
+    transform: translateY(-7px) scale(1.03);
+    box-shadow: 0 0 30px var(--color-pure-white), 0 0 50px var(--color-light-purple);
+    text-shadow: 0 0 12px var(--color-pure-white);
+}
+.product-card .view-details-btn {
+    background: none;
+    color: var(--color-light-purple);
+    border: 3px solid var(--color-light-purple);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+.product-card .view-details-btn:hover {
+    background-color: var(--color-pure-white);
+    color: var(--color-dark-purple);
+    transform: translateY(-7px) scale(1.03);
+    box-shadow: 0 0 30px var(--color-pure-white), 0 0 50px var(--color-light-purple);
+    text-shadow: 0 0 12px var(--color-dark-purple);
+}
+
+/* Register Section: A Iniciação no Fluxo */
+.register-form-container {
+    width: 100%;
+    max-width: 750px; /* Formulário maior */
+    background-color: rgba(255, 255, 255, 0.08); /* Mais translúcido */
+    backdrop-filter: blur(15px); /* Mais blur */
+    padding: 60px; /* Mais padding */
+    border-radius: 30px; /* Mais arredondado */
+    box-shadow: 0 0 30px rgba(74, 8, 127, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+/* Dedication Section: O Eco da Origem */
+.dedication-content {
+    max-width: 900px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 50px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(74, 8, 127, 0.3);
+}
+.dedication-text {
+    font-size: 1.4rem; /* Maior */
+    line-height: 2.0;
+    color: var(--color-off-white);
+    margin-bottom: 40px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+.dedication-text strong {
+    color: var(--color-pure-white);
+    text-shadow: 0 0 15px var(--color-pure-white), 0 0 30px var(--color-light-purple);
+}
+.signature-line {
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-light-purple), var(--color-pure-white));
+    margin: 0 auto 15px;
+    opacity: 0; /* Para animação JS */
+}
+.dedication-signature {
+    font-family: var(--font-body);
+    font-size: 1.6rem; /* Maior */
+    color: var(--color-light-purple);
+    font-weight: 300;
+    opacity: 0; /* Para animação JS */
+    text-shadow: 0 0 10px var(--color-light-purple);
+}
+
+
+/* Contact Section: Invoque o Canal de Comunicação */
+.contact-form {
+    width: 100%;
+    max-width: 800px; /* Formulário maior */
+    background-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    padding: 60px;
+    border-radius: 30px;
+    box-shadow: 0 0 30px rgba(74, 8, 127, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+.contact-form .input-group {
+    margin-bottom: 45px; /* Mais espaço */
+}
+.contact-form .input-group textarea {
+    resize: vertical;
+    min-height: 150px; /* Maior */
+}
+.contact-form .cta-button {
+    width: 100%;
+}
+
+/* Formulários (Login e Cadastro): Estilo Básico Comum */
+.login-form-crystalline, .register-form-crystalline {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 50px; /* Mais espaço entre os grupos de input */
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+}
+.input-label {
+    position: absolute;
+    top: 20px; /* Mais espaçamento */
+    left: 28px; /* Mais espaçamento */
+    color: var(--color-off-white);
+    font-size: 1.3rem; /* Label maior */
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-family: var(--font-body);
+    opacity: 0.7;
+    font-weight: 300;
+}
+.input-group input, .input-group textarea {
+    width: 100%;
+    padding: 25px 28px; /* Mais padding */
+    background: rgba(0, 0, 0, 0.3); /* Fundo do input mais escuro e transparente */
+    border: none;
+    border-bottom: 3px solid var(--color-primary-purple); /* Linha de energia mais grossa */
+    color: var(--color-pure-white);
+    font-size: 1.5rem; /* Texto do input maior */
+    font-family: var(--font-body);
+    outline: none;
+    transition: all 0.5s ease-in-out;
+    border-radius: 15px 15px 0 0; /* Cantos superiores mais arredondados */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra interna mais forte */
+}
+.input-group input:focus, .input-group textarea:focus {
+    border-color: var(--color-pure-white);
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.7), inset 0 0 18px rgba(255, 255, 255, 0.4); /* Brilho ao focar mais intenso */
+    background: rgba(0, 0, 0, 0.4);
+}
+/* Efeito de placeholder que flutua */
+.input-group input:focus + .input-label,
+.input-group input:not(:placeholder-shown) + .input-label,
+.input-group textarea:focus + .input-label,
+.input-group textarea:not(:placeholder-shown) + .input-label {
+    top: -28px; /* Flutua ainda mais alto */
+    left: 18px;
+    font-size: 1.1rem;
+    color: var(--color-pure-white);
+    text-shadow: 0 0 15px var(--color-pure-white), 0 0 30px var(--color-light-purple);
+    opacity: 1;
+    transform: scale(0.9);
+}
+
+.input-feedback {
+    display: block;
+    color: var(--color-light-purple);
+    font-size: 1.1rem;
+    margin-top: 10px;
+    min-height: 35px; /* Maior para mensagens de erro */
+    text-align: center;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.submit-button.activate-portal {
+    background: linear-gradient(45deg, var(--color-primary-purple), var(--color-light-purple));
+    color: var(--color-pure-white);
+    padding: 25px 55px; /* Maior padding */
+    border: none;
+    border-radius: 70px; /* Mais arredondado */
+    font-size: 2rem; /* Botão gigantesco */
+    font-family: var(--font-display);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px; /* Mais espaçamento */
+    box-shadow: 0 0 50px rgba(74, 8, 127, 0.9), inset 0 0 25px rgba(74, 8, 127, 0.5);
+    animation: glif-pulse-button 3s infinite ease-in-out alternate; /* Animação mais dinâmica */
+    letter-spacing: 1px;
+    font-weight: 300;
+}
+
+@keyframes glif-pulse-button {
+    0% { box-shadow: 0 0 50px rgba(74, 8, 127, 0.9), inset 0 0 25px rgba(74, 8, 127, 0.5); transform: scale(1); }
+    50% { box-shadow: 0 0 80px var(--color-pure-white), 0 0 150px var(--color-light-purple), inset 0 0 40px var(--color-pure-white); transform: scale(1.06); }
+    100% { box-shadow: 0 0 50px rgba(74, 8, 127, 0.9), inset 0 0 25px rgba(74, 8, 127, 0.5); transform: scale(1); }
+}
+
+.submit-button.activate-portal .glif-text {
+    text-shadow: 0 0 15px var(--color-pure-white);
+}
+
+.submit-button.activate-portal .login-glif,
+.submit-button.activate-portal .register-glif {
+    width: 60px; /* Glifo gigantesco */
+    height: 60px;
+    stroke: var(--color-pure-white);
+    stroke-dasharray: 300; /* Para animação de desenho */
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s ease-in-out;
+    transform-origin: center;
+    animation: glif-rotate 12s infinite linear; /* Rotação mais suave */
+    filter: drop-shadow(0 0 15px var(--color-pure-white));
+}
+
+@keyframes glif-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.forgot-password a, .register-link a, .login-link a {
+    color: var(--color-off-white);
+    text-decoration: none;
+    font-size: 1.2rem; /* Maior */
+    margin-top: 30px;
+    display: block;
+    text-align: center;
+    transition: color 0.4s ease, text-shadow 0.4s ease, transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.forgot-password a:hover, .register-link a:hover, .login-link a:hover {
+    color: var(--color-pure-white);
+    text-shadow: 0 0 15px var(--color-pure-white), 0 0 30px var(--color-light-purple);
+    transform: translateY(-4px) scale(1.02);
+}
+
+/* Footer: O Selo Dimensional */
+#main-footer {
+    background-color: var(--color-dark-purple);
+    padding: 70px 40px; /* Mais padding */
+    text-align: center;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -10px 30px rgba(74, 8, 127, 0.15);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+}
+#main-footer .footer-links a, #main-footer .social-media-links a {
+    color: var(--color-off-white);
+    text-decoration: none;
+    margin: 0 30px; /* Mais espaçamento */
+    font-size: 1.2rem; /* Maior */
+    transition: color 0.5s ease, text-shadow 0.5s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    text-transform: uppercase;
+    font-weight: 400;
+}
+#main-footer .footer-links a:hover, #main-footer .social-media-links a:hover {
+    color: var(--color-pure-white);
+    text-shadow: 0 0 20px var(--color-pure-white), 0 0 40px var(--color-light-purple);
+    transform: translateY(-6px) scale(1.06);
+}
+#main-footer .social-media-links {
+    margin-top: 35px;
+}
+#main-footer .social-media-links .social-icon {
+    font-size: 3rem; /* Ícones maiores */
+    filter: drop-shadow(0 0 10px var(--color-light-purple)) drop-shadow(0 0 20px var(--color-pure-white));
+}
+#main-footer .copyright-text {
+    margin-top: 60px;
+    font-size: 1.1rem; /* Maior */
+    color: var(--color-off-white);
+    opacity: 0.7;
+}
+
+/* Modals (Login e Cadastro): O Portão da Consciência */
+.login-portal-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95); /* Fundo quase totalmente preto para imersão total */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 2000;
+    overflow: hidden;
+    filter: blur(25px) brightness(0.4); /* Efeito inicial para animação */
+}
+.login-portal-modal.is-active {
+    visibility: visible;
+}
+
+.login-modal-content {
+    position: relative;
+    width: 95%;
+    max-width: 700px; /* Maior ainda */
+    background: rgba(255, 255, 255, 0.05); /* Fundo semi-transparente do cristal */
+    backdrop-filter: blur(35px) brightness(1.8); /* Mais blur e brilho para o cristal */
+    border-radius: 60px; /* Extremamente arredondado */
+    padding: 80px 60px; /* Mais padding */
+    box-shadow: 0 0 100px rgba(74, 8, 127, 0.9), 0 0 180px rgba(255, 255, 255, 0.7); /* Brilho neon avassalador */
+    border: 5px solid var(--color-pure-white); /* Borda mais grossa e branca */
+    transform: scale(0.5) translateY(-80px);
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    will-change: transform, opacity, filter, box-shadow;
+    overflow: hidden;
+    z-index: 1; /* Para estar acima do background animado */
+}
+
+.login-animation-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, var(--color-primary-purple) 0%, var(--color-dark-purple) 70%); /* Mais opaco no centro */
+    opacity: 0.8;
+    filter: blur(15px);
+    z-index: -1;
+    border-radius: 60px;
+    animation: modal-bg-pulse 20s infinite ease-in-out alternate;
+}
+
+@keyframes modal-bg-pulse {
+    0% { transform: scale(1); opacity: 0.8; filter: blur(15px); }
+    50% { transform: scale(1.03); opacity: 0.9; filter: blur(18px); }
+    100% { transform: scale(1); opacity: 0.8; filter: blur(15px); }
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 2.8rem; /* Ícone ainda maior */
+    color: var(--color-off-white);
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    padding: 12px;
+    outline: none;
+}
+.close-modal-btn:hover {
+    color: var(--color-pure-white);
+    transform: rotate(360deg) scale(1.4); /* Mais rotação e escala */
+    filter: drop-shadow(0 0 25px var(--color-pure-white));
+}
+.close-icon {
+    width: 45px; /* SVG maior */
+    height: 45px;
+    stroke: currentColor;
+    stroke-width: 3;
+}
+
+.login-title {
+    font-family: var(--font-display);
+    font-size: 4rem; /* Título grandioso no modal */
+    color: var(--color-pure-white);
+    text-align: center;
+    margin-bottom: 70px;
+    text-shadow: 0 0 30px var(--color-pure-white), 0 0 60px var(--color-light-purple), 0 0 100px var(--color-primary-purple);
+    opacity: 0;
+    letter-spacing: 4px;
+    line-height: 1.1;
+    font-weight: 200;
+}
+
+
+/* Animações CSS Puras (para elementos que não precisam de GSAP complexo) */
+
+/* Efeito de Glitch para Títulos (ativado por JS) */
+.glitch-text {
+    animation: glitch-effect 0.8s infinite linear alternate;
+}
+
+@keyframes glitch-effect {
+    0% {
+        transform: translate(0);
+        filter: hue-rotate(0deg) contrast(1);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(-5px, 5px) scale(1.01);
+        filter: hue-rotate(60deg) contrast(1.2);
+        opacity: 0.9;
+    }
+    40% {
+        transform: translate(4px, -4px) scale(0.99);
+        filter: hue-rotate(120deg) brightness(1.3);
+        opacity: 1;
+    }
+    60% {
+        transform: translate(-6px, -2px) scale(1.02);
+        filter: hue-rotate(180deg) contrast(1.1);
+        opacity: 0.95;
+    }
+    80% {
+        transform: translate(2px, 6px) scale(0.98);
+        filter: hue-rotate(240deg) brightness(1.4);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0);
+        filter: hue-rotate(0deg) contrast(1);
+        opacity: 1;
+    }
+}
+
+/* Partículas visuais (CSS básico, animação GSAP) */
+.visual-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998; /* Abaixo do cursor */
+    filter: blur(2px); /* Partículas mais etéreas */
+}
+
+/* Flying Product (para o item adicionado ao carrinho) */
+.flying-product-effect {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    border-radius: 15px; /* Mais arredondado */
+    box-shadow: 0 0 20px var(--color-light-purple), 0 0 40px var(--color-pure-white); /* Brilho mais forte */
+    width: 80px; /* Tamanho padrão maior */
+    height: 80px;
+    object-fit: cover;
+    animation: floating-product 4s infinite ease-in-out alternate; /* Efeito de flutuação e pulso */
+}
+@keyframes floating-product {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    50% { transform: translateY(-15px) rotate(10deg) scale(1.05); opacity: 0.95; }
+    100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+}
+
+
+/* Responsividade Extrema */
+@media (max-width: 1200px) {
+    #main-header {
+        padding: 15px 40px;
+    }
+    .logo-container .logo-text {
+        font-size: 2rem;
+    }
+    .logo-container img {
+        height: 45px;
+    }
+    #main-nav li a {
+        padding: 12px 20px;
+        font-size: 1.2rem;
+    }
+    .icon-button {
+        font-size: 1.8rem;
+    }
+    .icon-button .login-text, .icon-button .register-text {
+        font-size: 1.1rem;
+    }
+    #hero-section .heading-split-text {
+        font-size: 5.5rem;
+    }
+    #hero-section .subheading-fade-in {
+        font-size: 1.8rem;
+    }
+    .section-title {
+        font-size: 4rem;
+    }
+    .category-grid, .product-grid, .hubs-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+    }
+    .card-title, .product-title, .hub-info h3 {
+        font-size: 2.2rem;
+    }
+    .product-card .add-to-cart-btn, .product-card .view-details-btn {
+        font-size: 1.2rem;
+    }
+    .input-group input, .input-group textarea {
+        font-size: 1.4rem;
+    }
+    .submit-button.activate-portal {
+        font-size: 1.8rem;
+    }
+    .submit-button.activate-portal .login-glif,
+    .submit-button.activate-portal .register-glif {
+        width: 50px;
+        height: 50px;
+    }
+    .login-modal-content {
+        padding: 70px 50px;
+    }
+    .login-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    #main-header {
+        flex-wrap: wrap;
+        padding: 15px 20px;
+    }
+    .header-inner-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    #main-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    #main-nav li a {
+        padding: 10px 15px;
+        font-size: 1.1rem;
+    }
+    .header-actions {
+        margin-top: 20px;
+        width: 100%;
+        justify-content: center;
+    }
+    .icon-button {
+        margin: 0 10px;
+    }
+
+    #hero-section .heading-split-text {
+        font-size: 4.5rem;
+        letter-spacing: 4px;
+    }
+    #hero-section .subheading-fade-in {
+        font-size: 1.6rem;
+    }
+    .section-title {
+        font-size: 3.5rem;
+        letter-spacing: 3px;
+    }
+    section {
+        padding: 100px 40px;
+    }
+    .category-grid, .product-grid, .hubs-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+    }
+    .card-title, .product-title, .hub-info h3 {
+        font-size: 2rem;
+    }
+    .cta-button {
+        padding: 20px 40px;
+        font-size: 1.4rem;
+    }
+    .product-card .add-to-cart-btn, .product-card .view-details-btn {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+    .register-form-container, .contact-form {
+        padding: 50px 40px;
+    }
+    .input-group input, .input-group textarea {
+        font-size: 1.3rem;
+    }
+    .submit-button.activate-portal {
+        font-size: 1.6rem;
+        padding: 20px 45px;
+    }
+    .login-modal-content {
+        padding: 60px 40px;
+        border-radius: 40px;
+    }
+    .login-title {
+        font-size: 3rem;
+        margin-bottom: 50px;
+    }
+    .close-modal-btn {
+        font-size: 2.5rem;
+        top: 25px;
+        right: 25px;
+    }
+    .close-icon {
+        width: 38px;
+        height: 38px;
+    }
+    .dedication-text {
+        font-size: 1.2rem;
+    }
+    .dedication-signature {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo-container .logo-text {
+        font-size: 1.6rem;
+        margin-left: 10px;
+    }
+    .logo-container img {
+        height: 40px;
+    }
+    #main-nav li a {
+        font-size: 1rem;
+        padding: 8px 12px;
+    }
+    .icon-button {
+        font-size: 1.6rem;
+    }
+    .icon-button .login-text, .icon-button .register-text {
+        font-size: 1rem;
+    }
+    #hero-section .heading-split-text {
+        font-size: 3.5rem;
+        letter-spacing: 3px;
+    }
+    #hero-section .subheading-fade-in {
+        font-size: 1.3rem;
+    }
+    .section-title {
+        font-size: 2.8rem;
+        margin-bottom: 40px;
+    }
+    section {
+        padding: 80px 25px;
+    }
+    .category-grid, .product-grid, .hubs-grid {
+        grid-template-columns: 1fr; /* Uma coluna em telas muito pequenas */
+        gap: 30px;
+    }
+    .card-title, .product-title, .hub-info h3 {
+        font-size: 1.8rem;
+    }
+    .product-card .add-to-cart-btn, .product-card .view-details-btn {
+        padding: 12px 25px;
+        font-size: 0.9rem;
+    }
+    .register-form-container, .contact-form {
+        padding: 40px 25px;
+    }
+    .input-group input, .input-group textarea {
+        padding: 20px 20px;
+        font-size: 1.1rem;
+    }
+    .input-label {
+        font-size: 1rem;
+    }
+    .submit-button.activate-portal {
+        font-size: 1.4rem;
+        padding: 18px 35px;
+        gap: 15px;
+    }
+    .submit-button.activate-portal .login-glif,
+    .submit-button.activate-portal .register-glif {
+        width: 40px;
+        height: 40px;
+    }
+    .login-modal-content {
+        padding: 50px 30px;
+        border-radius: 30px;
+    }
+    .login-title {
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+    }
+    .close-modal-btn {
+        font-size: 2.2rem;
+        top: 20px;
+        right: 20px;
+    }
+    .close-icon {
+        width: 32px;
+        height: 32px;
+    }
+    .dedication-content {
+        padding: 30px;
+    }
+    .dedication-text {
+        font-size: 1.1rem;
+    }
+    .dedication-signature {
+        font-size: 1.2rem;
+    }
+}
